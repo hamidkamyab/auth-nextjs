@@ -39,7 +39,7 @@ export default function Login() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription className="text-stone-400">
+                <FormDescription className="text-stone-400 text-xs">
                   This is your Email.
                 </FormDescription>
                 <FormMessage />
@@ -60,7 +60,7 @@ export default function Login() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription className="text-stone-400">
+                <FormDescription className="text-stone-400 text-xs">
                   This is your Password.
                 </FormDescription>
                 <FormMessage />
