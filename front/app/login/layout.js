@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "ثبت‌نام | نام سایت",
+  title: "ورود | نام سایت",
   description: "در این صفحه می‌توانید حساب کاربری خود را ایجاد کنید.",
   robots: "noindex",
 };

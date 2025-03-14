@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { FormProvider, useForm } from "react-hook-form";
 
-export default function Register() {
+export default function Login() {
   const methods = useForm({
     defaultValues: {
       fullname: "",
@@ -23,31 +23,8 @@ export default function Register() {
   return (
     <>
       <div className="flex flex-col  gap-4">
-        <h2 className="text-center mb-4 text-3xl font-semibold">
-          Register Form
-        </h2>
+        <h2 className="text-center mb-4 text-3xl font-semibold">Login Form</h2>
         <FormProvider {...methods}>
-          <FormField
-            control={methods.control}
-            name="fullname"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    className="text-stone-800 font-medium"
-                    placeholder="FullName..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className="text-stone-400">
-                  This is your FullName.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={methods.control}
             name="email"
@@ -85,27 +62,6 @@ export default function Register() {
                 </FormControl>
                 <FormDescription className="text-stone-400">
                   This is your Password.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={methods.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    className="text-stone-800 font-medium"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className="text-stone-400">
-                  This is your Confirm Password.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

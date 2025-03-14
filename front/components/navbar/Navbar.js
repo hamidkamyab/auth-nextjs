@@ -6,6 +6,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
+import { Routes } from "@/router/Routes";
 
 export default function Navbar() {
   return (
@@ -14,32 +15,32 @@ export default function Navbar() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
-                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-1.5 px-2 hover:text-stone-800 transition-all duration-200 font-medium me-1.5">
+              <Link href={Routes.home} legacyBehavior passHref>
+                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
                   Home
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
-                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-1.5 px-2 hover:text-stone-800 transition-all duration-200 font-medium me-1.5">
+              <Link href={Routes.register} legacyBehavior passHref>
+                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
                   Register
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
-                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-1.5 px-2 hover:text-stone-800 transition-all duration-200 font-medium me-1.5">
+              <Link href={Routes.login} legacyBehavior passHref>
+                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
                   Login
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
-                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-1.5 px-2 hover:text-stone-800 transition-all duration-200 font-medium me-1.5">
+              <Link href={Routes.about} legacyBehavior passHref>
+                <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
                   About
                 </NavigationMenuLink>
               </Link>
