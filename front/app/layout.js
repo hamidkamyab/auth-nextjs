@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
   const items = [
     {
       key: 1,
-      label: "<span className='hover:bg-blue-300'>Home</span>",
+      label: <span className="hover:bg-blue-300">Home</span>,
     },
     {
       key: 2,
@@ -29,8 +29,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar />
-        <div>{children}</div>
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );
+}
+function ClientWrapper({ children }) {
+  return <>{children}</>;
 }

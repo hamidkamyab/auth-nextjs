@@ -9,40 +9,62 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const formSchema = z.object({
+  email: z.string().email("فرمت ایمیل صحیح نمی باشد"),
+  password: z.string().min(8, "پسورد نمی تواند کمتر از 8 کاراکتر باشد"),
+});
 
 export default function Login() {
   const methods = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      fullname: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = methods;
+
+  const onSubmit = (data) => console.log(data);
+
   return (
     <>
-      <div className="flex flex-col  gap-4">
-        <h2 className="text-center mb-4 text-3xl font-semibold">Login Form</h2>
+      <h2 className="text-center mb-8 text-3xl font-semibold">Login Form</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col  gap-8">
         <FormProvider {...methods}>
           <FormField
             control={methods.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    className="text-stone-800 font-medium"
-                    placeholder="info@example.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className="text-stone-400 text-xs">
-                  This is your Email.
-                </FormDescription>
-                <FormMessage />
+                <FormLabel className="text-stone-600">Email</FormLabel>
+                <div
+                  className={`${
+                    errors.email ? "after:w-2 after:!bg-rose-500" : "after:w-0"
+                  } relative after:content-[''] after:block after:w-0 shadow-md after:rounded-s-sm after:transition-all after:duration-500  rounded-sm after:h-full after:absolute after:left-0 after:top-0 after:bg-transparent`}
+                >
+                  <FormControl>
+                    <Input
+                      type="email"
+                      className={` ${
+                        errors.email
+                          ? "!border-rose-500 focus:!border-rose-500"
+                          : "border-transparent focus:!border-stone-800"
+                      } text-stone-800 relative rounded-sm focus-visible:!ring-offset-0 focus-visible:!ring-0 !border transition-all duration-500 `}
+                      placeholder="info@example.com"
+                    />
+                  </FormControl>
+                </div>
+                <FormMessage className="text-rose-400 text-xs font-normal" />
               </FormItem>
             )}
           />
@@ -52,27 +74,40 @@ export default function Login() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    className="text-stone-800 font-medium"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className="text-stone-400 text-xs">
-                  This is your Password.
-                </FormDescription>
-                <FormMessage />
+                <FormLabel className="text-stone-600">Password</FormLabel>
+                <div
+                  className={`${
+                    errors.password
+                      ? "after:w-2 after:!bg-rose-500"
+                      : "after:w-0"
+                  } relative after:content-[''] after:block after:w-0 shadow-md after:rounded-s-sm after:transition-all after:duration-500  rounded-sm after:h-full after:absolute after:left-0 after:top-0 after:bg-transparent`}
+                >
+                  <FormControl>
+                    <Input
+                      type="password"
+                      className={` ${
+                        errors.password
+                          ? "!border-rose-500 focus:!border-rose-500"
+                          : "border-transparent focus:!border-stone-800"
+                      } text-stone-800 relative rounded-sm focus-visible:!ring-offset-0 focus-visible:!ring-0 !border transition-all duration-500 `}
+                      {...field}
+                    />
+                  </FormControl>
+                </div>
+
+                <FormMessage className="text-rose-400 text-xs font-normal" />
               </FormItem>
             )}
           />
 
-          <Button className="bg-green-600 mt-4 hover:bg-green-700 transition-all duration-200 focus:ring-2 ring-emerald-400">
-            Register
+          <Button
+            type="submit"
+            className="bg-green-600 mt-4 hover:bg-green-700 transition-all duration-200 focus:ring-2 ring-emerald-400"
+          >
+            Login
           </Button>
         </FormProvider>
-      </div>
+      </form>
     </>
   );
 }
