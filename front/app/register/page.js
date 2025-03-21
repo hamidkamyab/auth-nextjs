@@ -20,19 +20,24 @@ const formSchema = z
   .object({
     name: z
       .string()
+      .nonempty("نام و نام خانوادگی نمی‌تواند خالی باشد.")
       .min(3, "نام و نام خانوادگی نمی تواند کمتر از 3 حرف باشد")
       .max(128, "نام و نام خانوادگی نمی تواند بزرگتر از 50 حرف باشد")
       .regex(/^[^\d]+$/, "نام و نام خانوادگی نباید شامل عدد باشد"),
-    email: z.string().email("فرمت ایمیل صحیح نمی باشد"),
+    email: z
+      .string()
+      .nonempty("ایمیل نمی‌تواند خالی باشد.")
+      .email("فرمت ایمیل صحیح نمی باشد"),
     password: z
       .string()
+      .nonempty("رمزعبور نمی‌تواند خالی باشد.")
       .min(8, "پسورد نمی تواند کمتر از 8 کاراکتر باشد")
       .max(255, "پسورد نمی تواند بیشتر از 255 کاراکتر باشد")
       .regex(
         /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
         "رمز عبور باید شامل حداقل یک حرف، یک عدد و یک کاراکتر خاص باشد"
       ),
-    c_password: z.string(),
+    c_password: z.string().nonempty("تکرار رمزعبور نمی‌تواند خالی باشد."),
   })
   .refine((data) => data.password === data.c_password, {
     message: "رمز عبور و تأیید رمز عبور یکسان نیستند",
@@ -72,6 +77,8 @@ export default function Register() {
         setTimeout(() => {
           redirect("/");
         }, 200);
+      } else {
+        toast.error("Error " + response.status + " : " + response.msg);
       }
     } catch (error) {
       console.log("Error: ", error);
@@ -123,7 +130,7 @@ export default function Register() {
                 >
                   <FormControl>
                     <Input
-                      type="email"
+                      type="text"
                       className={` ${
                         errors.email
                           ? "!border-rose-500 focus:!border-rose-500"

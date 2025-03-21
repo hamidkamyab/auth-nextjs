@@ -24,6 +24,6 @@ export async function POST(request) {
 
     return NextResponse.json({ data: data.user, status: 200 });
   } catch (error) {
-    return NextResponse.json({ data: error, status: 500 });
+    return NextResponse.json({ msg: "خطا سمت سرور", status: 500 });
   }
 }

@@ -8,6 +8,10 @@ export default function LoginLayout({ children }) {
     <>
       <div className="max-w-5xl mx-auto my-24">
         <div className="w-1/2 bg-gray-200 p-12 text-stone-800 mx-auto rounded-xl shadow-md shadow-slate-300 ">
+          <h2 className="text-center mb-8 text-3xl font-semibold">
+            Login Form
+          </h2>
+
           {children}
         </div>
       </div>

@@ -2,21 +2,28 @@
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Routes } from "@/router/Routes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { z } from "zod";
-import { POST } from "../api/login/route";
 
 const formSchema = z.object({
-  email: z.string(),
-  password: z.string().min(8, "پسورد نمی تواند کمتر از 8 کاراکتر باشد"),
+  email: z
+    .string()
+    .nonempty("ایمیل نمی‌تواند خالی باشد.")
+    .email("ایمیل نامعتبر است"),
+  password: z
+    .string({ required_error: "رمزعبور نمی تواند خالی باشد." })
+    .nonempty("رمزعبور نمی‌تواند خالی باشد.")
+    .min(8, "رمزعبور نمی تواند کمتر از 8 کاراکتر باشد"),
 });
 
 export default function Login() {
@@ -33,21 +40,49 @@ export default function Login() {
     handleSubmit,
     control,
     formState: { errors },
+    setError,
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log("onSubmit ~~~~~~~>", data);
-    const response = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    });
-    // console.log("Response ----->", await response.json());
+    try {
+      let response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
+      response = await response.json();
+      if (response.status === 200) {
+        toast.success("با موفقیت وارد شدید", {
+          position: "bottom-right",
+        });
+
+        setTimeout(() => {
+          redirect(Routes.home);
+        }, 200);
+      } else {
+        const keys = Object.keys(formSchema.shape);
+        Object.entries(response.data).forEach(([field, messages]) => {
+          if (keys.includes(field)) {
+            if (Array.isArray(messages)) {
+              setError(field, {
+                type: "server",
+                message: messages[0],
+              });
+            }
+          } else {
+            toast.error(messages[0], {
+              position: "bottom-right",
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
 
   return (
     <>
-      <h2 className="text-center mb-8 text-3xl font-semibold">Login Form</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col  gap-8">
         <FormProvider {...methods}>
           <FormField
@@ -63,13 +98,14 @@ export default function Login() {
                 >
                   <FormControl>
                     <Input
-                      type="email"
+                      type="text"
                       className={` ${
                         errors.email
                           ? "!border-rose-500 focus:!border-rose-500"
                           : "border-transparent focus:!border-stone-800"
                       } text-stone-800 relative rounded-sm focus-visible:!ring-offset-0 focus-visible:!ring-0 !border transition-all duration-500 `}
                       placeholder="info@example.com"
+                      {...field}
                     />
                   </FormControl>
                 </div>
