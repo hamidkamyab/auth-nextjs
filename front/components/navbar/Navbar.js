@@ -10,7 +10,7 @@ import { Routes } from "@/router/Routes";
 
 export default function Navbar() {
   return (
-    <div className="bg-slate-800 sticky top-0 w-full py-4">
+    <div className="bg-slate-800 fixed top-0 w-full py-4 z-30">
       <div className="max-w-7xl mx-auto">
         <NavigationMenu>
           <NavigationMenuList>

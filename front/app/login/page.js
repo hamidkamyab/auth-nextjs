@@ -12,9 +12,10 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+import { POST } from "../api/login/route";
 
 const formSchema = z.object({
-  email: z.string().email("فرمت ایمیل صحیح نمی باشد"),
+  email: z.string(),
   password: z.string().min(8, "پسورد نمی تواند کمتر از 8 کاراکتر باشد"),
 });
 
@@ -34,7 +35,15 @@ export default function Login() {
     formState: { errors },
   } = methods;
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    console.log("onSubmit ~~~~~~~>", data);
+    const response = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    });
+    // console.log("Response ----->", await response.json());
+  };
 
   return (
     <>

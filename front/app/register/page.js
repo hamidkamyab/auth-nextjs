@@ -12,10 +12,13 @@ import { Input } from "@/components/ui/input";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
+import Loading from "./loading";
 
 const formSchema = z
   .object({
-    fullname: z
+    name: z
       .string()
       .min(3, "نام و نام خانوادگی نمی تواند کمتر از 3 حرف باشد")
       .max(128, "نام و نام خانوادگی نمی تواند بزرگتر از 50 حرف باشد")
@@ -29,21 +32,21 @@ const formSchema = z
         /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
         "رمز عبور باید شامل حداقل یک حرف، یک عدد و یک کاراکتر خاص باشد"
       ),
-    confirmPassword: z.string(),
+    c_password: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.c_password, {
     message: "رمز عبور و تأیید رمز عبور یکسان نیستند",
-    path: ["confirmPassword"],
+    path: ["c_password"],
   });
 
 export default function Register() {
   const methods = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullname: "",
+      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      c_password: "",
     },
   });
 
@@ -54,30 +57,45 @@ export default function Register() {
     formState: { errors },
   } = methods;
 
-  const onSubmit = (data) => console.log(data);
-
+  const onSubmit = async (data) => {
+    try {
+      let response = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
+      response = await response.json();
+      if (response.status === 200) {
+        toast.success("ثبت نام با موفقیت انجام شد", {
+          position: "bottom-right",
+        });
+        setTimeout(() => {
+          redirect("/");
+        }, 200);
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
   return (
     <>
-      <h2 className="text-center mb-8 text-3xl font-semibold">Register Form</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
         <FormProvider {...methods}>
           <FormField
             control={control}
-            name="fullname"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-stone-600">FullName</FormLabel>
                 <div
                   className={`${
-                    errors.fullname
-                      ? "after:w-2 after:!bg-rose-500"
-                      : "after:w-0"
+                    errors.name ? "after:w-2 after:!bg-rose-500" : "after:w-0"
                   } relative after:content-[''] after:block after:w-0 shadow-md after:rounded-s-sm after:transition-all after:duration-500  rounded-sm after:h-full after:absolute after:left-0 after:top-0 after:bg-transparent`}
                 >
                   <FormControl>
                     <Input
                       className={` ${
-                        errors.fullname
+                        errors.name
                           ? "!border-rose-500 focus:!border-rose-500"
                           : "border-transparent focus:!border-stone-800"
                       } text-stone-800 relative rounded-sm focus-visible:!ring-offset-0 focus-visible:!ring-0 !border transition-all duration-500 `}
@@ -158,7 +176,7 @@ export default function Register() {
 
           <FormField
             control={control}
-            name="confirmPassword"
+            name="c_password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-stone-600">
@@ -166,7 +184,7 @@ export default function Register() {
                 </FormLabel>
                 <div
                   className={`${
-                    errors.confirmPassword
+                    errors.c_password
                       ? "after:w-2 after:!bg-rose-500"
                       : "after:w-0"
                   } relative after:content-[''] after:block after:w-0 shadow-md after:rounded-s-sm after:transition-all after:duration-500  rounded-sm after:h-full after:absolute after:left-0 after:top-0 after:bg-transparent`}
@@ -175,7 +193,7 @@ export default function Register() {
                     <Input
                       type="password"
                       className={` ${
-                        errors.confirmPassword
+                        errors.c_password
                           ? "!border-rose-500 focus:!border-rose-500"
                           : "border-transparent focus:!border-stone-800"
                       } text-stone-800 relative rounded-sm focus-visible:!ring-offset-0 focus-visible:!ring-0 !border transition-all duration-500 `}

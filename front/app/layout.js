@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar/Navbar";
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Auth Service",
@@ -29,11 +30,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar />
-        <ClientWrapper>{children}</ClientWrapper>
+        {children}
+        <ToastContainer />
       </body>
     </html>
   );
-}
-function ClientWrapper({ children }) {
-  return <>{children}</>;
 }
