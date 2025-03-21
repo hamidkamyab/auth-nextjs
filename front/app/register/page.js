@@ -14,35 +14,36 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
-import Loading from "./loading";
 
-const formSchema = z
-  .object({
-    name: z
-      .string()
-      .nonempty("نام و نام خانوادگی نمی‌تواند خالی باشد.")
-      .min(3, "نام و نام خانوادگی نمی تواند کمتر از 3 حرف باشد")
-      .max(128, "نام و نام خانوادگی نمی تواند بزرگتر از 50 حرف باشد")
-      .regex(/^[^\d]+$/, "نام و نام خانوادگی نباید شامل عدد باشد"),
-    email: z
-      .string()
-      .nonempty("ایمیل نمی‌تواند خالی باشد.")
-      .email("فرمت ایمیل صحیح نمی باشد"),
-    password: z
-      .string()
-      .nonempty("رمزعبور نمی‌تواند خالی باشد.")
-      .min(8, "پسورد نمی تواند کمتر از 8 کاراکتر باشد")
-      .max(255, "پسورد نمی تواند بیشتر از 255 کاراکتر باشد")
-      .regex(
-        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
-        "رمز عبور باید شامل حداقل یک حرف، یک عدد و یک کاراکتر خاص باشد"
-      ),
-    c_password: z.string().nonempty("تکرار رمزعبور نمی‌تواند خالی باشد."),
-  })
-  .refine((data) => data.password === data.c_password, {
+const baseSchema = z.object({
+  name: z
+    .string()
+    .nonempty("نام و نام خانوادگی نمی‌تواند خالی باشد.")
+    .min(3, "نام و نام خانوادگی نمی تواند کمتر از 3 حرف باشد")
+    .max(128, "نام و نام خانوادگی نمی تواند بزرگتر از 50 حرف باشد")
+    .regex(/^[^\d]+$/, "نام و نام خانوادگی نباید شامل عدد باشد"),
+  email: z
+    .string()
+    .nonempty("ایمیل نمی‌تواند خالی باشد.")
+    .email("فرمت ایمیل صحیح نمی باشد"),
+  password: z
+    .string()
+    .nonempty("رمزعبور نمی‌تواند خالی باشد.")
+    .min(8, "پسورد نمی تواند کمتر از 8 کاراکتر باشد")
+    .max(255, "پسورد نمی تواند بیشتر از 255 کاراکتر باشد")
+    .regex(
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+      "رمز عبور باید شامل حداقل یک حرف، یک عدد و یک کاراکتر خاص باشد"
+    ),
+  c_password: z.string().nonempty("تکرار رمزعبور نمی‌تواند خالی باشد."),
+});
+const formSchema = baseSchema.refine(
+  (data) => data.password === data.c_password,
+  {
     message: "رمز عبور و تأیید رمز عبور یکسان نیستند",
     path: ["c_password"],
-  });
+  }
+);
 
 export default function Register() {
   const methods = useForm({
@@ -60,6 +61,7 @@ export default function Register() {
     handleSubmit,
     control,
     formState: { errors },
+    setError,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -70,7 +72,7 @@ export default function Register() {
         headers: { "Content-Type": "application/json" },
       });
       response = await response.json();
-      if (response.status === 200) {
+      if (response.status < 300) {
         toast.success("ثبت نام با موفقیت انجام شد", {
           position: "bottom-right",
         });
@@ -78,7 +80,20 @@ export default function Register() {
           redirect("/");
         }, 200);
       } else {
-        toast.error("Error " + response.status + " : " + response.msg);
+        const keys = Object.keys(baseSchema.shape);
+        console.log(response);
+        Object.entries(response.data).forEach(([field, messages]) => {
+          if (keys.includes(field)) {
+            setError(field, {
+              type: "server",
+              message: messages[0],
+            });
+          } else {
+            toast.error(messages[0], {
+              position: "bottom-right",
+            });
+          }
+        });
       }
     } catch (error) {
       console.log("Error: ", error);

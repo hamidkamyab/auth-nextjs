@@ -16,13 +16,16 @@ export async function POST(request) {
 
     const data = await response.json();
 
-    Cookies.set("token", data.token, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 60 * 60 * 48, //exp after 2 days
-    });
-
-    return NextResponse.json({ data: data.user, status: 200 });
+    if (response.status < 300) {
+      Cookies.set("token", data.token, {
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 48, //exp after 2 days
+      });
+      return NextResponse.json({ data: data.user, status: 200 });
+    } else {
+      return NextResponse.json({ data: data, status: response.status });
+    }
   } catch (error) {
     return NextResponse.json({ msg: "خطا سمت سرور", status: 500 });
   }

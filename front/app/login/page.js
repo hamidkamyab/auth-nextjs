@@ -51,7 +51,7 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
       });
       response = await response.json();
-      if (response.status === 200) {
+      if (response.status < 300) {
         toast.success("با موفقیت وارد شدید", {
           position: "bottom-right",
         });
