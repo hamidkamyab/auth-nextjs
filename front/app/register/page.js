@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
+import useAuthStore from "@/store/auth";
 
 const baseSchema = z.object({
   name: z
@@ -46,6 +47,8 @@ const formSchema = baseSchema.refine(
 );
 
 export default function Register() {
+  const { setAuth } = useAuthStore();
+
   const methods = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,15 +76,15 @@ export default function Register() {
       });
       response = await response.json();
       if (response.status < 300) {
+        setAuth(true);
         toast.success("ثبت نام با موفقیت انجام شد", {
           position: "bottom-right",
         });
         setTimeout(() => {
           redirect("/");
-        }, 200);
+        }, 400);
       } else {
         const keys = Object.keys(baseSchema.shape);
-        console.log(response);
         Object.entries(response.data).forEach(([field, messages]) => {
           if (keys.includes(field)) {
             setError(field, {

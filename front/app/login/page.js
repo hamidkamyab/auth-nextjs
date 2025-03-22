@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Routes } from "@/router/Routes";
+import useAuthStore from "@/store/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -27,6 +28,7 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const { setAuth } = useAuthStore();
   const methods = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,13 +54,14 @@ export default function Login() {
       });
       response = await response.json();
       if (response.status < 300) {
+        setAuth(true);
         toast.success("با موفقیت وارد شدید", {
           position: "bottom-right",
         });
 
         setTimeout(() => {
           redirect(Routes.home);
-        }, 200);
+        }, 400);
       } else {
         const keys = Object.keys(formSchema.shape);
         Object.entries(response.data).forEach(([field, messages]) => {

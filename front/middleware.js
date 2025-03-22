@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { Routes } from "./router/Routes";
 
-const protectedRoutes = ["/about"];
-const authRoutes = ["/login", "/register"];
+const protectedRoutes = [Routes.about];
+const authRoutes = [Routes.register, Routes.login];
 
 export function middleware(request) {
   const token = request.cookies.get("token");
@@ -11,11 +12,11 @@ export function middleware(request) {
   const isAuthUrl = authRoutes.includes(url);
 
   if (!token && isProtectedUrl) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(Routes.home, request.url));
   }
 
   if (token && isAuthUrl) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(Routes.home, request.url));
   }
 
   return NextResponse.next();
