@@ -25,11 +25,19 @@ export default function Navbar() {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href={Routes.about} legacyBehavior passHref>
+                  <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
+                    About
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
               {isAuth ? (
                 <>
                   <NavigationMenuItem>
                     <Link href={Routes.logout} legacyBehavior passHref>
-                      <NavigationMenuLink className="text-white hover:bg-rose-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
+                      <NavigationMenuLink className="text-white hover:bg-rose-300 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
                         Logout
                       </NavigationMenuLink>
                     </Link>
@@ -54,14 +62,6 @@ export default function Navbar() {
                   </NavigationMenuItem>
                 </>
               )}
-
-              <NavigationMenuItem>
-                <Link href={Routes.about} legacyBehavior passHref>
-                  <NavigationMenuLink className="text-white hover:bg-stone-100 rounded-md py-2 px-2.5 hover:text-stone-800 transition-all duration-200 text-sm font-medium me-1.5">
-                    About
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         ) : (

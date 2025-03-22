@@ -1,7 +1,7 @@
 export const Routes = {
   home: "/",
-  register: "/register",
-  login: "/login",
-  logout: "/logout",
+  register: "/auth/register",
+  login: "/auth/login",
+  logout: "/auth/logout",
   about: "/about",
 };
